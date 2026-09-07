@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>치유 노무법인 디지털 전환 문진표</title>
+<style>
+  :root{
+    --navy:#1F3A5F; --ink:#26303B; --muted:#6B7480; --line:#D7DCE3;
+    --fill:#EEF1F5; --paper:#FFFFFF; --bg:#F6F7F9; --warn:#A24A1F; --ok:#2E7D5B;
+  }
+  *{box-sizing:border-box}
+  html{font-size:15px}
+  body{margin:0;background:var(--bg);color:var(--ink);
+       font-family:"Pretendard","Malgun Gothic","Apple SD Gothic Neo","Noto Sans KR",sans-serif;line-height:1.55}
+  a{color:var(--navy)}
+  header{background:var(--navy);color:#fff;padding:22px 28px}
+  header h1{margin:0;font-size:1.35rem;font-weight:700;letter-spacing:-.01em}
+  header p{margin:6px 0 0;font-size:.9rem;opacity:.85}
+  .toolbar{position:sticky;top:0;z-index:5;background:var(--paper);border-bottom:1px solid var(--line);
+           padding:10px 28px;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+  .toolbar .spacer{flex:1}
+  .toolbar .status{font-size:.85rem;color:var(--muted)}
+  button{font:inherit;font-size:.88rem;padding:7px 13px;border-radius:6px;border:1px solid var(--line);
+         background:var(--paper);color:var(--ink);cursor:pointer}
+  button:hover{background:var(--fill)}
+  button.primary{background:var(--navy);border-color:var(--navy);color:#fff}
+  button.primary:hover{background:#17304f}
+  button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{outline:2px solid var(--navy);outline-offset:1px}
+  .layout{display:grid;grid-template-columns:230px 1fr;gap:0;max-width:1180px;margin:0 auto}
+  nav{position:sticky;top:52px;align-self:start;padding:22px 16px;height:calc(100vh - 52px);overflow:auto}
+  nav a{display:block;padding:7px 10px;border-radius:6px;text-decoration:none;font-size:.9rem;color:var(--ink)}
+  nav a:hover{background:var(--fill)}
+  nav a .cnt{float:right;font-size:.78rem;color:var(--muted)}
+  nav a.done .cnt{color:var(--ok)}
+  main{padding:24px 28px 80px;min-width:0}
+  section{background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:20px 24px;margin-bottom:22px}
+  section h2{margin:0 0 4px;font-size:1.12rem;color:var(--navy)}
+  section .intro{margin:0 0 14px;font-size:.9rem;color:var(--muted)}
+  .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px 18px}
+  .field label{display:block;font-size:.82rem;color:var(--muted);margin-bottom:3px}
+  input[type=text],input[type=number],textarea,select{width:100%;font:inherit;padding:7px 9px;border:1px solid var(--line);border-radius:5px;background:#fff;color:var(--ink)}
+  textarea{min-height:64px;resize:vertical;overflow:hidden}
+  .q{display:grid;grid-template-columns:56px 1fr 260px;gap:0 16px;padding:16px 0;border-top:1px solid var(--line)}
+  .q:first-of-type{border-top:0}
+  .q .no{font-weight:700;color:var(--navy);padding-top:2px}
+  .q .text{font-weight:600;margin:0 0 8px}
+  .q .subs{margin:0 0 8px;display:grid;gap:6px}
+  .q .sub{display:flex;align-items:center;gap:8px;font-size:.88rem}
+  .q .sub input[type=text]{width:90px;padding:4px 7px}
+  .q .sub input.wide{flex:1;width:auto}
+  .q .purpose{font-size:.82rem;color:var(--muted);border-left:3px solid var(--fill);padding-left:10px}
+  .q .purpose b{color:var(--warn);font-weight:600}
+  .q .check{display:flex;flex-wrap:wrap;gap:6px 16px;margin:0 0 8px;font-size:.9rem}
+  .q .check label{display:flex;align-items:center;gap:5px}
+  .rank{display:grid;gap:6px;margin-bottom:8px}
+  .rank div{display:flex;align-items:center;gap:8px;font-size:.9rem}
+  .rank select{width:64px}
+  .memo textarea{min-height:80px}
+  .foot{color:var(--muted);font-size:.82rem;text-align:center;padding:20px}
+  @media (max-width:900px){
+    .layout{grid-template-columns:1fr} nav{display:none}
+    .q{grid-template-columns:44px 1fr} .q .purpose{grid-column:2;margin-top:8px;border-left:0;padding-left:0}
+    .grid{grid-template-columns:1fr}
+  }
+  @media print{
+    @page{size:A4;margin:14mm}
+    body{background:#fff;font-size:10.5pt}
+    header{background:none;color:#000;padding:0 0 8px;border-bottom:2px solid #000}
+    header p{opacity:1;color:#333}
+    .toolbar,nav,.foot,.hide-print{display:none!important}
+    .layout{display:block;max-width:none}
+    main{padding:0}
+    section{border:0;padding:12px 0;margin:0;break-inside:auto}
+    section h2{font-size:12pt}
+    .q{grid-template-columns:40px 1fr 190px;break-inside:avoid;padding:8px 0}
+    input,textarea,select{border:1px solid #bbb;background:#fff;color:#000;font-size:10pt}
+    textarea{min-height:36px}
+    .q .purpose{font-size:8.5pt;color:#444}
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1>치유 노무법인 디지털 전환 문진표</h1>
+  <p>컨설턴트 진행용 · 마케팅 진단도구(maxconsulting.or.kr/DX) 사전 면담 자료 · 입력 내용은 이 브라우저에 자동 저장됩니다.</p>
+</header>
+
+<div class="toolbar">
+  <button class="primary" onclick="window.print()">PDF로 저장 / 인쇄</button>
+  <button onclick="exportJSON()">파일 저장 (.json)</button>
+  <button onclick="document.getElementById('file').click()">파일 불러오기</button>
+  <input type="file" id="file" accept=".json" style="display:none" onchange="importJSON(this)">
+  <button onclick="exportText()">텍스트 복사용 보기</button>
+  <button onclick="resetAll()">초기화</button>
+  <span class="spacer"></span>
+  <span class="status" id="status">답변 0 / 0</span>
+</div>
+
+<div class="layout">
+  <nav id="nav"></nav>
+  <main id="main"></main>
+</div>
+<div class="foot">MAX Consulting · 소상공인·중소기업 디지털 전환 컨설팅</div>
+
+<script>
+/* ===================== 문항 정의 (여기만 고치면 됩니다) ===================== */
+const INFO = [
+  ["법인명","치유 노무법인"],["대표 노무사",""],["설립 연도",""],["소재지",""],
+  ["노무사 수",""],["직원 수",""],["면담자(직책)",""],["면담 일시",""],
+  ["진행 컨설턴트",""],["대표 전화",""],["대표 이메일",""],["적용 트랙","__select__:소상공인|중소기업"]
+];
+
+const SECTIONS = [
+ {id:"s1", title:"1부. 사업 구조와 고객", intro:"무엇을 누구에게 파는지 확인합니다. 이 답변이 채널 우선순위를 결정합니다.",
+  q:[
+   {no:"1-1", text:"주력 업무 분야와 매출 비중은 어떻게 됩니까?",
+    subs:[["급여·4대보험 아웃소싱","%"],["노무 자문(월 고문)","%"],["산재·부당해고 등 사건 대리","%"],["취업규칙·인사제도 컨설팅","%"],["교육·강의, 기타","%"]],
+    purpose:"채널 우선순위를 결정하는 기준입니다. 반복 매출(자문·아웃소싱)과 건별 매출(사건)은 마케팅 방식이 다릅니다."},
+   {no:"1-2", text:"주 고객은 누구입니까?",
+    subs:[["사업주","%"],["근로자 개인","%"],["고객 업종(상위 3개)","text"],["고객 규모(직원 수 기준)","text"],["고객 소재 지역(구·시 단위)","text"]],
+    purpose:"사업주 대상이면 신뢰 콘텐츠, 근로자 대상이면 검색 노출과 접수 경로가 우선입니다."},
+   {no:"1-3", text:"현재 고정 고객(자문 계약)은 몇 곳이며 평균 계약 기간은 얼마입니까?",
+    purpose:"고객 유지율과 재계약 관리 필요성을 판단합니다."},
+   {no:"1-4", text:"다른 노무법인과 비교해 어떤 점을 강점으로 내세우십니까?",
+    subs:[["법인명 '치유'에 담은 의미","text"],["특화 분야(산재, 직장 내 괴롭힘 등)","text"]],
+    purpose:"홈페이지 첫 화면과 검색 키워드의 핵심 메시지가 됩니다."},
+   {no:"1-5", text:"월평균 신규 문의 건수와 실제 수임(계약) 건수는 얼마입니까?",
+    subs:[["월 신규 문의","건"],["월 수임","건"]],
+    purpose:"현재 전환율의 기준값입니다. 12주 후 KPI 비교에 사용합니다."}
+  ]},
+ {id:"s2", title:"2부. 고객 유입 경로와 현재 노출 상태", intro:"고객이 어떻게 찾아오는지, 검색하면 무엇이 보이는지 확인합니다.",
+  q:[
+   {no:"2-1", text:"신규 고객은 주로 어떤 경로로 연락합니까? 비중을 적어 주십시오.",
+    subs:[["기존 고객·지인 소개","%"],["네이버 등 검색","%"],["공공기관·협회 연계","%"],["세무사·회계사 등 전문가 소개","%"],["기타","%"]],
+    purpose:"소개 비중이 80%를 넘으면 디지털 채널의 역할은 '검증'입니다. 검색 비중이 있으면 '유입'입니다."},
+   {no:"2-2", text:"고객이 법인 이름을 처음 어디서 들었는지 확인하고 있습니까?",
+    purpose:"확인하지 않으면 채널별 효과를 측정할 수 없습니다. 접수 시 질문 항목으로 추가할 근거입니다."},
+   {no:"2-3", text:"첫 접촉은 주로 어떤 방식입니까?",
+    check:["전화","방문","이메일","문자·카카오톡"],
+    purpose:"접수 경로 설계의 기준입니다."},
+   {no:"2-4", text:"전화를 받지 못하는 시간대와 비율은 어느 정도입니까?",
+    subs:[["부재 시간대(점심·야간·주말)","text"],["부재중 전화 회신 규칙","text"]],
+    purpose:"노무 상담은 부재중 전화가 곧 이탈입니다. 카카오톡 채널이나 접수 폼의 필요성을 판단합니다."},
+   {no:"2-5", text:"지금 사용 중인 '전화 화면 안내'는 어떤 서비스입니까?",
+    subs:[["서비스명(통신사 발신 정보, 후후, T전화 등)","text"],["표시 내용과 최근 갱신 시점","text"],["연간 비용","만원"]],
+    purpose:"기존 자산의 유지·정리 여부를 결정합니다."},
+   {no:"2-6", text:"네이버에서 법인명을 검색하면 무엇이 나옵니까? (면담 중 함께 확인)",
+    check:["스마트플레이스 등록됨","지도에 노출됨","동명 업체가 먼저 나옴","아무것도 나오지 않음"],
+    purpose:"<b>즉시 조치 항목</b>입니다. 등록되어 있다면 관리 계정 보유자를 확인합니다."},
+   {no:"2-7", text:"'○○구 노무사', '○○ 노무법인' 같은 지역 검색에서 경쟁 노무법인은 어떻게 노출됩니까?",
+    purpose:"경쟁 수준과 진입 난이도를 판단합니다."}
+  ]},
+ {id:"s3", title:"3부. 보유 디지털 자산", intro:"이미 가진 것과 방치된 것을 구분합니다.",
+  q:[
+   {no:"3-1", text:"도메인을 보유하고 있습니까? 이메일은 어떤 주소를 사용합니까?",
+    subs:[["도메인명 / 관리자","text"],["이메일 종류(포털 계정 / 자체 도메인)","text"]],
+    purpose:"자체 도메인 메일은 전문직 신뢰의 기본입니다. 홈페이지 구축 시 함께 정리합니다."},
+   {no:"3-2", text:"카카오톡 채널, 블로그, 인스타그램 등 개설했다가 방치된 계정이 있습니까?",
+    subs:[["계정명 / 개설 시점 / 마지막 게시일 / 관리자","text"]],
+    purpose:"방치 계정은 정리하거나 되살려야 합니다. <b>관리 권한 소재</b>를 반드시 확인합니다."},
+   {no:"3-3", text:"과거에 홈페이지·블로그·광고를 시도한 적이 있습니까? 중단한 이유는 무엇입니까?",
+    purpose:"같은 실패를 반복하지 않기 위한 질문입니다. 대개 콘텐츠 인력 부족이 원인입니다."},
+   {no:"3-4", text:"명함, 브로슈어, 회사 소개서, 제안서 양식은 갖추어져 있습니까?",
+    check:["로고 원본 파일","대표 사진","사무실 사진","회사 소개서","제안서 양식"],
+    purpose:"홈페이지와 스마트플레이스에 바로 쓸 수 있는 자산입니다."},
+   {no:"3-5", text:"네이버·카카오·구글에 등록된 사업자 정보는 최신 상태입니까?",
+    subs:[["주소, 전화번호, 영업시간 일치 여부","text"]],
+    purpose:"정보가 어긋나면 검색 노출에 불리합니다."}
+  ]},
+ {id:"s4", title:"4부. 콘텐츠 자원과 규제", intro:"블로그와 홈페이지에 쓸 재료가 있는지, 광고 규정을 알고 있는지 확인합니다.",
+  q:[
+   {no:"4-1", text:"글로 쓸 수 있는 자료가 어느 정도 있습니까?",
+    check:["상담 사례(익명화 가능)","기고문","강의 자료","뉴스레터","자주 묻는 질문 목록"],
+    purpose:"블로그 초기 3개월 콘텐츠의 원천입니다. 사례가 있으면 착수 속도가 크게 달라집니다."},
+   {no:"4-2", text:"고객이 가장 자주 묻는 질문 5가지는 무엇입니까?",
+    subs:[["1","text"],["2","text"],["3","text"],["4","text"],["5","text"]],
+    purpose:"검색 키워드와 첫 콘텐츠 주제를 이 답변에서 뽑습니다."},
+   {no:"4-3", text:"대표 노무사의 이름과 얼굴을 홈페이지·블로그에 노출할 의향이 있습니까?",
+    purpose:"전문직은 사람이 브랜드입니다. 노출 의향이 없으면 콘텐츠 전략을 법인 중심으로 바꿔야 합니다."},
+   {no:"4-4", text:"글쓰기에 투입할 수 있는 인력과 시간은 얼마입니까?",
+    subs:[["담당자","text"],["주당 투입 시간","시간"],["초안 작성 가능 / 검수만 가능","text"]],
+    purpose:"주 2시간 미만이면 외주 초안과 내부 검수 방식으로 설계합니다."},
+   {no:"4-5", text:"공인노무사 광고 규정(허위·과장 금지, 결과 보장 표현 금지 등)을 인지하고 있습니까?",
+    subs:[["금지 표현에 대한 내부 기준 유무","text"]],
+    purpose:"콘텐츠 가이드라인을 먼저 정해야 합니다. 노무사회 광고 규정을 함께 확인합니다."}
+  ]},
+ {id:"s5", title:"5부. 고객 데이터와 업무 관리", intro:"진단도구의 고객 데이터 축에 해당합니다. 노무법인은 고객 정보 자체가 자산입니다.",
+  q:[
+   {no:"5-1", text:"고객 명부는 어떻게 관리합니까?",
+    check:["엑셀","수기","급여 프로그램 내","관리 안 함"],
+    subs:[["기록 항목(연락처, 업종, 계약 내용, 담당자)","text"]],
+    purpose:"명부가 없으면 재계약 안내와 뉴스레터가 불가능합니다."},
+   {no:"5-2", text:"상담 문의 내용을 기록합니까? 수임으로 이어지지 않은 문의도 남깁니까?",
+    purpose:"미수임 문의는 콘텐츠 주제이자 재접촉 대상입니다."},
+   {no:"5-3", text:"자문 계약 만료일과 갱신을 어떻게 관리합니까?",
+    purpose:"만료 30일 전 안내 자동화 여부를 판단합니다."},
+   {no:"5-4", text:"급여·4대보험 업무에 사용하는 프로그램은 무엇입니까?",
+    subs:[["프로그램명","text"],["고객사와 자료를 주고받는 방식(이메일, 카카오톡, 팩스, 포털)","text"]],
+    purpose:"업무 효율과 고객 데이터 연계 가능성을 판단합니다."},
+   {no:"5-5", text:"고객 개인정보(근로자 급여 자료 등)를 어떻게 보관하고 폐기합니까?",
+    subs:[["보관 위치, 접근 권한","text"],["개인정보처리방침 유무","text"]],
+    purpose:"홈페이지 접수 폼을 만들면 개인정보처리방침이 필수입니다."},
+   {no:"5-6", text:"기존 고객에게 노동법 개정 사항이나 지원금 정보를 정기적으로 안내합니까?",
+    subs:[["방법 / 주기","text"]],
+    purpose:"이미 하고 있다면 뉴스레터·블로그로 확장하기 쉽습니다."}
+  ]},
+ {id:"s6", title:"6부. 실행 역량과 자원", intro:"누가, 얼마의 예산으로, 어디까지 직접 할 수 있는지 확인합니다.",
+  q:[
+   {no:"6-1", text:"디지털 전환 업무의 내부 담당자와 최종 의사결정자는 누구입니까?",
+    purpose:"담당자가 없으면 대표가 병목이 됩니다. 착수 전에 지정을 요청합니다."},
+   {no:"6-2", text:"초기 구축 예산과 월 운영 예산은 어느 정도 생각하십니까?",
+    subs:[["초기 예산","만원"],["월 운영 예산","만원"],["정부 지원사업(비대면 바우처 등) 활용 의향","text"]],
+    purpose:"홈페이지 방식(정적 페이지 / 제작 업체)과 광고 여부를 결정합니다."},
+   {no:"6-3", text:"담당자의 디지털 활용 수준은 어느 정도입니까?",
+    check:["스마트플레이스 직접 관리 가능","블로그 직접 게시 가능","간단한 웹 편집 가능","모두 어려움"],
+    purpose:"인계 후 자체 운영 가능성을 판단합니다."},
+   {no:"6-4", text:"내부에서 직접 운영할 부분과 외부에 맡길 부분을 어떻게 나누고 싶습니까?",
+    purpose:"12주 계획의 역할 분담 기준입니다."}
+  ]},
+ {id:"s7", title:"7부. 목표와 성과 기준", intro:"12주 계획의 종착점과 측정 지표를 고객의 말로 받아 적습니다.",
+  q:[
+   {no:"7-1", text:"12주 뒤 어떤 상태가 되어 있기를 바랍니까?",
+    purpose:"실행 계획의 종착점입니다. 구체적인 문장으로 받아 적습니다."},
+   {no:"7-2", text:"다음 항목의 우선순위를 매겨 주십시오. (1이 가장 높음)",
+    rank:["신규 고객 확보","기존 고객 관리·재계약","업무 효율화","브랜드·신뢰도 제고"],
+    purpose:"우선순위에 따라 채널 배분이 달라집니다."},
+   {no:"7-3", text:"성과를 무엇으로 판단하시겠습니까?",
+    check:["월 신규 문의 수","검색 노출 순위","자문 계약 수","기타"],
+    purpose:"3개월 KPI 표에 그대로 반영합니다."},
+   {no:"7-4", text:"가장 걱정되는 점은 무엇입니까?",
+    check:["시간 부족","비용","효과 불확실","규정 위반","기타"],
+    purpose:"장애 요인을 미리 파악하여 계획에 대응책을 넣습니다."},
+   {no:"7-5", text:"1년 뒤 법인의 모습(고객 수, 인원, 특화 분야)은 어떻게 그리고 계십니까?",
+    purpose:"장기 방향과 12주 계획의 정합성을 확인합니다."}
+  ]}
+];
+
+const MEMO = ["네이버 검색 결과 확인 내용","경쟁 노무법인 3곳 노출 현황","예상 병목(진단도구 결과와 대조)","즉시 조치 항목(면담 당일)","후속 확인 필요 사항"];
+
+/* ===================== 렌더링 ===================== */
+const KEY = "chiyu_dx_intake_v1";
+let data = JSON.parse(localStorage.getItem(KEY) || "{}");
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+function inputEl(id, kind, cls){
+  const v = data[id] ?? "";
+  if (kind === "textarea") return `<textarea id="${id}" data-k="${id}">${esc(v)}</textarea>`;
+  return `<input type="text" id="${id}" data-k="${id}" class="${cls||""}" value="${esc(v)}">`;
+}
+
+function render(){
+  let h = `<section id="s0"><h2>기본 정보</h2><div class="grid">`;
+  INFO.forEach(([label, def], i) => {
+    const id = "info_" + i;
+    if (typeof def === "string" && def.startsWith("__select__")) {
+      const opts = def.split(":")[1].split("|");
+      const v = data[id] ?? "";
+      h += `<div class="field"><label>${label}</label><select data-k="${id}"><option value="">선택</option>${opts.map(o=>`<option ${v===o?"selected":""}>${o}</option>`).join("")}</select></div>`;
+    } else {
+      if (data[id] === undefined && def) data[id] = def;
+      h += `<div class="field"><label>${label}</label>${inputEl(id,"text")}</div>`;
+    }
+  });
+  h += `</div></section>`;
+
+  SECTIONS.forEach(sec => {
+    h += `<section id="${sec.id}"><h2>${sec.title}</h2><p class="intro">${sec.intro}</p>`;
+    sec.q.forEach(q => {
+      const base = "q_" + q.no;
+      h += `<div class="q"><div class="no">${q.no}</div><div>`;
+      h += `<p class="text">${q.text}</p>`;
+      if (q.check) {
+        h += `<div class="check">` + q.check.map((c,i)=>{
+          const id = `${base}_c${i}`;
+          return `<label><input type="checkbox" data-k="${id}" ${data[id]?"checked":""}>${c}</label>`;
+        }).join("") + `</div>`;
+      }
+      if (q.rank) {
+        h += `<div class="rank">` + q.rank.map((r,i)=>{
+          const id = `${base}_r${i}`; const v = data[id] ?? "";
+          return `<div><select data-k="${id}"><option value="">-</option>${[1,2,3,4].map(n=>`<option ${String(v)===String(n)?"selected":""}>${n}</option>`).join("")}</select>${r}</div>`;
+        }).join("") + `</div>`;
+      }
+      if (q.subs) {
+        h += `<div class="subs">` + q.subs.map(([label,unit],i)=>{
+          const id = `${base}_s${i}`;
+          if (unit === "text") return `<div class="sub"><span>${label}</span>${inputEl(id,"text","wide")}</div>`;
+          return `<div class="sub"><span>${label}</span>${inputEl(id,"text")}<span>${unit}</span></div>`;
+        }).join("") + `</div>`;
+      }
+      h += inputEl(base + "_a", "textarea");
+      h += `</div><div class="purpose">${q.purpose}</div></div>`;
+    });
+    h += `</section>`;
+  });
+
+  h += `<section id="s8" class="memo"><h2>컨설턴트 관찰 메모</h2>`;
+  MEMO.forEach((m,i)=>{ h += `<div class="field"><label>${m}</label>${inputEl("memo_"+i,"textarea")}</div>`; });
+  h += `</section>`;
+  document.getElementById("main").innerHTML = h;
+
+  document.getElementById("nav").innerHTML =
+    `<a href="#s0">기본 정보</a>` +
+    SECTIONS.map(s=>`<a href="#${s.id}" data-sec="${s.id}">${s.title.replace(/\. .*$/,"")} <span class="cnt"></span></a>`).join("") +
+    `<a href="#s8">관찰 메모</a>`;
+
+  document.querySelectorAll("textarea").forEach(autosize);
+  updateStatus();
+}
+
+function autosize(t){ t.style.height="auto"; t.style.height = Math.max(64, t.scrollHeight) + "px"; }
+
+function updateStatus(){
+  let total = 0, done = 0;
+  SECTIONS.forEach(sec => {
+    let sd = 0;
+    sec.q.forEach(q => {
+      total++;
+      const base = "q_" + q.no;
+      const answered = Object.keys(data).some(k => k.startsWith(base) && data[k] !== "" && data[k] !== false);
+      if (answered) { done++; sd++; }
+    });
+    const a = document.querySelector(`nav a[data-sec="${sec.id}"]`);
+    if (a) { a.querySelector(".cnt").textContent = `${sd}/${sec.q.length}`; a.classList.toggle("done", sd === sec.q.length); }
+  });
+  document.getElementById("status").textContent = `답변 ${done} / ${total} · 자동 저장됨`;
+}
+
+document.addEventListener("input", e => {
+  const k = e.target.dataset.k; if (!k) return;
+  data[k] = e.target.type === "checkbox" ? e.target.checked : e.target.value;
+  localStorage.setItem(KEY, JSON.stringify(data));
+  if (e.target.tagName === "TEXTAREA") autosize(e.target);
+  updateStatus();
+});
+
+/* ===================== 저장 / 불러오기 ===================== */
+function fileName(ext){
+  const d = new Date(), pad = n => String(n).padStart(2,"0");
+  return `치유노무법인_문진표_${d.getFullYear()}${pad(d.getMonth()+1)}${pad(d.getDate())}.${ext}`;
+}
+function download(name, text, type){
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob([text], {type}));
+  a.download = name; a.click(); URL.revokeObjectURL(a.href);
+}
+function exportJSON(){ download(fileName("json"), JSON.stringify(data, null, 2), "application/json"); }
+function importJSON(input){
+  const f = input.files[0]; if (!f) return;
+  const r = new FileReader();
+  r.onload = () => {
+    try { data = JSON.parse(r.result); localStorage.setItem(KEY, JSON.stringify(data)); render(); }
+    catch { alert("JSON 파일을 읽을 수 없습니다. 이 도구에서 저장한 파일인지 확인해 주십시오."); }
+    input.value = "";
+  };
+  r.readAsText(f);
+}
+function exportText(){
+  let out = "치유 노무법인 디지털 전환 문진표\n\n[기본 정보]\n";
+  INFO.forEach(([l], i) => { if (data["info_"+i]) out += `${l}: ${data["info_"+i]}\n`; });
+  SECTIONS.forEach(sec => {
+    out += `\n[${sec.title}]\n`;
+    sec.q.forEach(q => {
+      const base = "q_" + q.no; let lines = [];
+      if (q.check) q.check.forEach((c,i)=>{ if (data[`${base}_c${i}`]) lines.push(c); });
+      if (q.rank) q.rank.forEach((r,i)=>{ if (data[`${base}_r${i}`]) lines.push(`${r}: ${data[`${base}_r${i}`]}`); });
+      if (q.subs) q.subs.forEach(([l,u],i)=>{ const v = data[`${base}_s${i}`]; if (v) lines.push(`${l}: ${v}${u==="text"?"":u}`); });
+      if (data[base+"_a"]) lines.push(data[base+"_a"]);
+      if (lines.length) out += `${q.no} ${q.text}\n  - ${lines.join("\n  - ")}\n`;
+    });
+  });
+  out += "\n[컨설턴트 관찰 메모]\n";
+  MEMO.forEach((m,i)=>{ if (data["memo_"+i]) out += `${m}: ${data["memo_"+i]}\n`; });
+  const w = window.open("", "_blank");
+  w.document.write(`<title>문진표 텍스트</title><pre style="white-space:pre-wrap;font-family:inherit;padding:20px;line-height:1.6">${esc(out)}</pre>`);
+}
+function resetAll(){
+  if (!confirm("입력한 내용을 모두 지웁니다. 먼저 '파일 저장'으로 백업하셨습니까?")) return;
+  data = {}; localStorage.removeItem(KEY); render();
+}
+window.addEventListener("beforeprint", () => document.querySelectorAll("textarea").forEach(autosize));
+render();
+</script>
+</body>
+</html>
